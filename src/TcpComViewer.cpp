@@ -10,18 +10,27 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <sstream>
+#include <QListView>
 
 TcpComViewer::TcpComViewer(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::TcpComViewer())
 {
     ui->setupUi(this);
+    this->income_model = new QStringListModel(this);
+    
     QObject::connect(ui->actionExit,SIGNAL(triggered()),this,SLOT(exit()));
     QObject::connect(ui->run_btn,SIGNAL(clicked()),this,SLOT(run()));
     QObject::connect(ui->port_in,SIGNAL(textChanged(const QString &)),this,SLOT(set_server_port(const QString &)));
     QObject::connect(ui->srv_in,SIGNAL(textChanged(const QString &)),this,SLOT(set_server_addr(const QString &)));
     QObject::connect(ui->num_conns_in,SIGNAL(textChanged(const QString &)),this,SLOT(set_server_num_conns(const QString &)));
     this->server = NULL;
+    
+    QStringList conns_list;
+    conns_list << "test1" << "test2";
+    
+    this->income_model->setStringList(conns_list);
+    this->ui->income_view->setModel(this->income_model);
 }
 
 void
@@ -44,6 +53,7 @@ TcpComViewer::run()
             std::stringstream ss;
             ss << this->server_num_conns;
             params.push_back(ss.str());
+            this->ui->run_btn->setText("stop");
             this->server->run(new Cmd(CMD_RUN, params));
         } else {
             QMessageBox msg;
@@ -55,6 +65,7 @@ TcpComViewer::run()
         this->server->stop((void *)0);
         this->server->~TCPServer();
         this->server = NULL;
+        this->ui->run_btn->setText("run");
     }
 }
 
@@ -93,10 +104,21 @@ TcpComViewer::attach_to_server_output(std::string output)
 }
 
 void
-TcpComViewer::update() {
-    std::cout << "update()" << std::endl;
+TcpComViewer::update_messages() {
+    std::cout << "update_messages()" << std::endl;
     if (this->server != NULL) {
-        std::string income = this->server->next_icome;
+        std::string income = this->server->read_srv_msg();
         this->attach_to_server_output(income);
+    }
+}
+
+void
+TcpComViewer::update_income() {
+    std::cout << "update_income()" << std::endl;
+    QString in = "Test";
+    if (this->server != NULL) {
+        this->income_model->insertRow(this->income_model->rowCount());
+        QModelIndex index = this->income_model->index(this->income_model->rowCount()-1);
+        this->income_model->setData(index, in);
     }
 }
