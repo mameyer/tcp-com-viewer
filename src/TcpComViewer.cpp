@@ -107,18 +107,22 @@ void
 TcpComViewer::update_messages() {
     std::cout << "update_messages()" << std::endl;
     if (this->server != NULL) {
-        std::string income = this->server->read_srv_msg();
-        this->attach_to_server_output(income);
+        std::string msg = this->server->next_srv_msg();
+        this->attach_to_server_output(msg);
     }
 }
 
 void
 TcpComViewer::update_income() {
     std::cout << "update_income()" << std::endl;
-    QString in = "Test";
+    
+    std::pair<int, std::string> in = this->server->next_income();
+    std::string income = in.second;
+    
+    QString qin = tr(income.c_str());
     if (this->server != NULL) {
         this->income_model->insertRow(this->income_model->rowCount());
         QModelIndex index = this->income_model->index(this->income_model->rowCount()-1);
-        this->income_model->setData(index, in);
+        this->income_model->setData(index, qin);
     }
 }
