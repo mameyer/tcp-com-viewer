@@ -37,6 +37,8 @@ public:
     }
     void update_messages();
     void update_income();
+    void add_conn();
+    void rm_conn();
 public slots:
     void set_val(int);
     void attach_to_server_output(std::string);

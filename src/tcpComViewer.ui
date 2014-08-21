@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>380</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>10</x>
       <y>10</y>
       <width>241</width>
-      <height>108</height>
+      <height>111</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -63,25 +63,59 @@
      </item>
     </layout>
    </widget>
-   <widget class="QListWidget" name="srv_out">
+   <widget class="QWidget" name="gridLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>10</y>
+      <width>131</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QLabel" name="open_conns_lbl">
+       <property name="text">
+        <string>open conns:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QListWidget" name="open_conns_out"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>130</y>
       <width>381</width>
-      <height>111</height>
+      <height>188</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QListView" name="income_view">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>10</y>
-      <width>121</width>
-      <height>111</height>
-     </rect>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="msg_lbl">
+       <property name="text">
+        <string>messages:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QListWidget" name="srv_out"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="income_lbl">
+       <property name="text">
+        <string>income:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QListView" name="income_view"/>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -112,7 +146,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
    <property name="text">
-    <string>beenden</string>
+    <string>Beenden</string>
    </property>
   </action>
  </widget>

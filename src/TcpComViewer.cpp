@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <sstream>
 #include <QListView>
+#include <QtGlobal>
 
 TcpComViewer::TcpComViewer(QWidget *parent) :
     QMainWindow(parent),
@@ -18,7 +19,7 @@ TcpComViewer::TcpComViewer(QWidget *parent) :
 {
     ui->setupUi(this);
     this->income_model = new QStringListModel(this);
-    
+
     QObject::connect(ui->actionExit,SIGNAL(triggered()),this,SLOT(exit()));
     QObject::connect(ui->run_btn,SIGNAL(clicked()),this,SLOT(run()));
     QObject::connect(ui->port_in,SIGNAL(textChanged(const QString &)),this,SLOT(set_server_port(const QString &)));
@@ -26,10 +27,10 @@ TcpComViewer::TcpComViewer(QWidget *parent) :
     QObject::connect(ui->num_conns_in,SIGNAL(textChanged(const QString &)),this,SLOT(set_server_num_conns(const QString &)));
     this->server = NULL;
     
-    QStringList conns_list;
-    conns_list << "test1" << "test2";
-    
-    this->income_model->setStringList(conns_list);
+    this->ui->srv_in->setText(tr("localhost"));
+    this->ui->port_in->setText(tr("7777"));
+    this->ui->num_conns_in->setText(tr("10"));
+
     this->ui->income_view->setModel(this->income_model);
 }
 
@@ -55,6 +56,9 @@ TcpComViewer::run()
             params.push_back(ss.str());
             this->ui->run_btn->setText("stop");
             this->server->run(new Cmd(CMD_RUN, params));
+            this->ui->srv_in->setDisabled(true);
+            this->ui->port_in->setDisabled(true);
+            this->ui->num_conns_in->setDisabled(true);
         } else {
             QMessageBox msg;
             msg.critical(0, "Error", "Felder nicht korrekt ausgeüllt!");
@@ -66,6 +70,9 @@ TcpComViewer::run()
         this->server->~TCPServer();
         this->server = NULL;
         this->ui->run_btn->setText("run");
+        this->ui->srv_in->setDisabled(false);
+        this->ui->port_in->setDisabled(false);
+        this->ui->num_conns_in->setDisabled(false);
     }
 }
 
@@ -115,14 +122,39 @@ TcpComViewer::update_messages() {
 void
 TcpComViewer::update_income() {
     std::cout << "update_income()" << std::endl;
-    
+
     std::pair<int, std::string> in = this->server->next_income();
     std::string income = in.second;
-    
-    QString qin = tr(income.c_str());
-    if (this->server != NULL) {
-        this->income_model->insertRow(this->income_model->rowCount());
-        QModelIndex index = this->income_model->index(this->income_model->rowCount()-1);
-        this->income_model->setData(index, qin);
+
+    if (!income.empty()) {
+        QString qin = tr(income.c_str());
+        if (this->server != NULL && !qin.isEmpty()) {
+            this->income_model->insertRow(this->income_model->rowCount());
+            QModelIndex index = this->income_model->index(this->income_model->rowCount()-1);
+            this->income_model->setData(index, qin);
+        }
+    }
+}
+
+void TcpComViewer::add_conn()
+{
+    std::stringstream ss;
+    ss << this->server->last_conn_added;
+    std::cout << "add_conn(" << ss.str() << ")" << std::endl;
+    this->ui->open_conns_out->addItem(new QListWidgetItem(ss.str().c_str()));
+}
+
+void TcpComViewer::rm_conn()
+{
+    int conn_rm = this->server->last_conn_erased;
+    std::cout << "rm_conn(" << conn_rm << ")" << std::endl;
+
+    QString conn_str = QString(conn_rm);
+    for(int i=0; i<this->ui->open_conns_out->count(); i++) {
+        QListWidgetItem *item = this->ui->open_conns_out->takeItem(i);
+        if (item->text() == conn_str) {
+            this->ui->open_conns_out->removeItemWidget(item);
+            break;
+        }
     }
 }
