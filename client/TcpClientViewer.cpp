@@ -8,6 +8,7 @@ TcpClientViewer::TcpClientViewer(QWidget *parent) :
 {
     ui->setupUi(this);
     this->client = NULL;
+    
     QObject::connect(ui->srv_addr_in,SIGNAL(textChanged(const QString &)),this,SLOT(set_server_addr(QString)));
     QObject::connect(ui->srv_port_in,SIGNAL(textChanged(const QString &)),this,SLOT(set_server_port(QString)));
     QObject::connect(ui->client_msg_in,SIGNAL(textChanged(const QString &)),this,SLOT(set_client_msg(QString)));
@@ -15,6 +16,8 @@ TcpClientViewer::TcpClientViewer(QWidget *parent) :
     QObject::connect(ui->server_conn_btn,SIGNAL(clicked()),this,SLOT(run()));
     QObject::connect(ui->send_btn,SIGNAL(clicked()),this,SLOT(send()));
     
+    this->ui->srv_addr_in->setText("localhost");
+    this->ui->srv_port_in->setText("7777");
     this->ui->send_btn->setDisabled(true);
 }
 
@@ -58,6 +61,7 @@ void TcpClientViewer::run()
     if (this->client == NULL) {
         if (!this->server_addr.empty() && this->server_port>0) {
             this->client = new TCPClient(this->server_addr, this->server_port);
+            this->client->attach(this);
             this->ui->server_conn_btn->setText("disconnect");
             this->ui->srv_addr_in->setDisabled(true);
             this->ui->srv_port_in->setDisabled(true);
@@ -73,10 +77,37 @@ void TcpClientViewer::run()
     }
 }
 
-void TcpClientViewer::send()
+void
+TcpClientViewer::send()
 {
     std::cout << "send(" << this->client_msg << ")" << std::endl;
     if (!this->client_msg.empty() && this->client != NULL) {
         this->client->send_data(this->client_msg);
+    }
+}
+
+void
+TcpClientViewer::register_server_answer()
+{
+    std::cout << "emit_sig_server_answer()" << std::endl;
+    if (this->client != NULL) {
+        std::string income = this->client->next_income();
+        
+        if (!income.empty()) {
+            this->ui->srv_answers_view->addItem(new QListWidgetItem(income.c_str()));
+        }
+    }
+}
+
+void TcpClientViewer::handle_server_disconnect()
+{
+    std::cout << "handle_server_disconnect()" << std::endl;
+    if (this->client != NULL) {
+        this->client->~TCPClient();
+        this->client = NULL;
+        this->ui->server_conn_btn->setText("connect");
+        this->ui->srv_addr_in->setDisabled(false);
+        this->ui->srv_port_in->setDisabled(false);
+        this->ui->send_btn->setDisabled(true);
     }
 }

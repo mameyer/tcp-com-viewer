@@ -4,10 +4,10 @@ find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
-SET(tcpserverviewer_SOURCES server/TcpServerViewer.cpp server/main.cpp ../tcp-communication/server/TCPServer.cpp ../tcp-communication/common/common.cpp)
+SET(tcpserverviewer_SOURCES server/TcpServerViewer.cpp server/main.cpp ../tcp-communication/server/TCPServer.cpp ../tcp-communication/common/common.cpp ../tcp-communication/common/Subject.cpp)
 SET(tcpserverviewer_HEADERS server/TcpServerViewer.hpp)
 
-SET(tcpclientviewer_SOURCES client/TcpClientViewer.cpp client/main.cpp ../tcp-communication/client/TCPClient.cpp)
+SET(tcpclientviewer_SOURCES client/TcpClientViewer.cpp client/main.cpp ../tcp-communication/client/TCPClient.cpp ../tcp-communication/common/Subject.cpp)
 SET(tcpclientviewer_HEADERS client/TcpClientViewer.hpp)
 
 qt4_wrap_cpp(tcpserverviewer_MOC ${tcpserverviewer_HEADERS})

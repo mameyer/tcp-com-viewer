@@ -8,13 +8,13 @@
 
 #include "ui_tcpServerViewer.h"
 #include "../../tcp-communication/server/TCPServer.hpp"
-#include "../../tcp-communication/common/Observer.hpp"
+#include "../../tcp-communication/common/TCPObserver.hpp"
 
 namespace Ui {
     class TcpServerViewer;
 }
 
-class TcpServerViewer : public QMainWindow, public Observer
+class TcpServerViewer : public QMainWindow, public TCPObserver
 {
     Q_OBJECT
 private:

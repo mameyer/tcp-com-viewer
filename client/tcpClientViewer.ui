@@ -54,7 +54,7 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QListView" name="srv_answers_view"/>
+      <widget class="QListWidget" name="srv_answers_view"/>
      </item>
     </layout>
    </widget>
@@ -97,6 +97,10 @@
      </item>
     </layout>
    </widget>
+   <zorder>gridLayoutWidget</zorder>
+   <zorder>gridLayoutWidget_2</zorder>
+   <zorder>gridLayoutWidget_3</zorder>
+   <zorder>listWidget</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
