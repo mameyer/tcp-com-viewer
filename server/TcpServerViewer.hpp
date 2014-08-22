@@ -1,37 +1,32 @@
-#ifndef TCPCOMVIEWER_HPP__
-#define TCPCOMVIEWER_HPP__
+#ifndef TCPSERVERVIEWER_HPP__
+#define TCPSERVERVIEWER_HPP__
 
 #include <QMainWindow>
 #include <QAbstractListModel>
 #include <QtCore>
 #include <QtGui>
 
-#include "ui_tcpComViewer.h"
+#include "ui_tcpServerViewer.h"
 #include "../../tcp-communication/server/TCPServer.hpp"
 #include "../../tcp-communication/common/Observer.hpp"
 
 namespace Ui {
-    class TcpComViewer;
+    class TcpServerViewer;
 }
 
-class OpenConnsModel : public QAbstractListModel
-{
-    
-};
-
-class TcpComViewer : public QMainWindow, public Observer
+class TcpServerViewer : public QMainWindow, public Observer
 {
     Q_OBJECT
 private:
     int val;
-    Ui::TcpComViewer *ui;
+    Ui::TcpServerViewer *ui;
     TCPServer *server;
     std::string server_addr;
     int server_port;
     int server_num_conns;
     QStringListModel *income_model;
 public:
-    TcpComViewer(QWidget *parent = NULL);
+    TcpServerViewer(QWidget *parent = NULL);
     int get_val() const {
         return val;
     }

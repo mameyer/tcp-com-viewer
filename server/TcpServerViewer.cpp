@@ -1,4 +1,4 @@
-#include "TcpComViewer.hpp"
+#include "TcpServerViewer.hpp"
 
 #include <iostream>
 #include <QListWidgetItem>
@@ -13,9 +13,9 @@
 #include <QListView>
 #include <QtGlobal>
 
-TcpComViewer::TcpComViewer(QWidget *parent) :
+TcpServerViewer::TcpServerViewer(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::TcpComViewer())
+    ui(new Ui::TcpServerViewer())
 {
     ui->setupUi(this);
     this->income_model = new QStringListModel(this);
@@ -35,7 +35,7 @@ TcpComViewer::TcpComViewer(QWidget *parent) :
 }
 
 void
-TcpComViewer::set_val(int val)
+TcpServerViewer::set_val(int val)
 {
     if (this->val != val) {
         this->val = val;
@@ -44,7 +44,7 @@ TcpComViewer::set_val(int val)
 }
 
 void
-TcpComViewer::run()
+TcpServerViewer::run()
 {
     if (this->server == NULL) {
         if (!this->server_addr.empty() && this->server_port>0) {
@@ -77,41 +77,41 @@ TcpComViewer::run()
 }
 
 void
-TcpComViewer::exit()
+TcpServerViewer::exit()
 {
     this->close();
 }
 
 void
-TcpComViewer::set_server_addr(const QString &server_addr)
+TcpServerViewer::set_server_addr(const QString &server_addr)
 {
     this->server_addr = server_addr.toStdString();
     std::cout << "set_server_addr: " << this->server_addr << std::endl;
 }
 
 void
-TcpComViewer::set_server_num_conns(const QString &num_conns)
+TcpServerViewer::set_server_num_conns(const QString &num_conns)
 {
     this->server_num_conns = num_conns.toInt();
     std::cout << "set_server_num_conns: " << this->server_num_conns << std::endl;
 }
 
 void
-TcpComViewer::set_server_port(const QString &server_port)
+TcpServerViewer::set_server_port(const QString &server_port)
 {
     this->server_port = server_port.toInt();
     std::cout << "set_server_port: " << this->server_port << std::endl;
 }
 
 void
-TcpComViewer::attach_to_server_output(std::string output)
+TcpServerViewer::attach_to_server_output(std::string output)
 {
     this->ui->srv_out->addItem(new QListWidgetItem(output.c_str()));
     std::cout << "attach_to_server_output(" << output << ")" << std::endl;
 }
 
 void
-TcpComViewer::update_messages() {
+TcpServerViewer::update_messages() {
     std::cout << "update_messages()" << std::endl;
     if (this->server != NULL) {
         std::string msg = this->server->next_srv_msg();
@@ -120,7 +120,7 @@ TcpComViewer::update_messages() {
 }
 
 void
-TcpComViewer::update_income() {
+TcpServerViewer::update_income() {
     std::cout << "update_income()" << std::endl;
 
     std::pair<int, std::string> in = this->server->next_income();
@@ -136,7 +136,7 @@ TcpComViewer::update_income() {
     }
 }
 
-void TcpComViewer::add_conn()
+void TcpServerViewer::add_conn()
 {
     std::stringstream ss;
     ss << this->server->last_conn_added;
@@ -144,7 +144,7 @@ void TcpComViewer::add_conn()
     this->ui->open_conns_out->addItem(new QListWidgetItem(ss.str().c_str()));
 }
 
-void TcpComViewer::rm_conn()
+void TcpServerViewer::rm_conn()
 {
     int conn_rm = this->server->last_conn_erased;
     std::cout << "rm_conn(" << conn_rm << ")" << std::endl;

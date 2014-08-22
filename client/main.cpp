@@ -2,17 +2,17 @@
 #include <QApplication>
 #include <QPushButton>
 
-#include "TcpComViewer.hpp"
+#include "TcpClientViewer.hpp"
 
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
     
-    TcpComViewer *tcpComViewer = new TcpComViewer();
-    tcpComViewer->show();
+    TcpClientViewer *tcpClientViewer = new TcpClientViewer();
+    tcpClientViewer->show();
     
     app.exec();
     
-    delete tcpComViewer;
+    delete tcpClientViewer;
     
     return EXIT_SUCCESS;
 }
